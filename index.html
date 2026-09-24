@@ -50,10 +50,10 @@ const tr=k=>TX[lang][k],loadBest=()=>{best=+ld('jpr-best-'+di)||0};loadBest();
 function toggleLang(){lang=lang==='de'?'en':'de';sv('jpr-lang',lang)}
 let cheat=false,goal=200,ed=0,code='',tapN=0,back='menu',jet=false;
 const atMenu=()=>state==='menu'||state==='shop'||(state==='settings'&&back==='menu');
-let bar=0,bcd=0,tab=0,wallet=+ld('jpr-coins')||0,SH={bl:0,jo:[0],js:0,co:[0],cs:0};
+let ic=0,bar=0,bcd=0,tab=0,wallet=+ld('jpr-coins')||0,SH={bl:0,jo:[0],js:0,co:[0],cs:0};
 try{Object.assign(SH,JSON.parse(ld('jpr-shop')||'{}'))}catch(e){}
 const saveS=()=>{sv('jpr-coins',wallet);sv('jpr-shop',JSON.stringify(SH))};
-const BCD=[60,50,40,32,25],BCOST=[250,400,600,850,1100];
+const ICD=[10,7.5,5],BCD=[60,50,40,32,25],BCOST=[250,400,600,850,1100];
 const SK=[
 {c:0,b:'#8a94a8',a:'#d8503c',f:['#ff6a1a','#ffc23a','#fff6d0'],p:'255,170,50'},
 {c:150,b:'#4a2a20',a:'#ff8a3a',f:['#ff3a1a','#ff8a2a','#ffd070'],p:'255,110,40'},
@@ -99,7 +99,7 @@ let obs=[],cns=[],parts=[],spawnT=1.5,coinT=.6;
 const P={x:130,y:FLOOR-21,vy:0,r:0,g:true};
 
 function reset(c){
-  cheat=c===true;bar=0;bcd=0;goal=cheat?200:DIFF[di].g;ed=cheat?2:di;state='play';dist=0;coins=0;speed=300;obs=[];cns=[];parts=[];spawnT=1.2;coinT=.6;lvl=0;lvT=0;tipOn=!cheat;hold=false;
+  cheat=c===true;bar=0;bcd=0;ic=0;goal=cheat?200:DIFF[di].g;ed=cheat?2:di;state='play';dist=0;coins=0;speed=300;obs=[];cns=[];parts=[];spawnT=1.2;coinT=.6;lvl=0;lvT=0;tipOn=!cheat;hold=false;
   P.y=FLOOR-21;P.vy=0;P.r=0;deadT=0;
 }
 function die(){
@@ -137,15 +137,15 @@ function spawnCoins(){
 }
 function spawnObs(){
   if(cns.some(c=>c.x>W-250)){spawnT=.3;return}
-  const L=Math.min(lvl,8),ex=[[],['s','l'],['s','l','b']][ed],k=ex.length&&Math.random()<.5?ex[(Math.random()*ex.length)|0]:'';
+  const L=Math.min(lvl,8),ex=[[],['s','l'],['s','l','b']][ed];let k=ex.length&&Math.random()<.5?ex[(Math.random()*ex.length)|0]:'';if(k==='l'&&ic>0)k='s';
   if(k==='s')obs.push({t:'s',x:W+100,len:rnd(90,170),c:Math.random()<.5});
-  else if(k==='l'){const y=rnd(CEIL+40,FLOOR-40);obs.push({t:'l',x:0,y,wt:1.2});if(ed===2)obs.push({t:'l',x:0,y:clampY(y+(y>H/2?-1:1)*rnd(90,140)),wt:1.2})}
+  else if(k==='l'){ic=ICD[ed];const y=rnd(CEIL+40,FLOOR-40);obs.push({t:'l',x:0,y,wt:1.2});if(ed===2)obs.push({t:'l',x:0,y:clampY(y+(y>H/2?-1:1)*rnd(90,140)),wt:1.2})}
   else if(k==='b')obs.push({t:'b',x:W+100,y0:rnd(CEIL+90,FLOOR-90),amp:rnd(30,70),ph:rnd(0,6),y:0});
-  else if(Math.random()>Math.min(.6,.35+L*.04)){
+  else if(ic>0||Math.random()>Math.min(.6,.35+L*.04)){
     const len=rnd(80,170+L*10);
     obs.push({t:'z',x:W+100,y:rnd(CEIL+70,FLOOR-70),len,a:rnd(0,Math.PI),w:Math.random()<Math.min(.7,.3+L*.06)?rnd(1,1.8+L*.1)*(Math.random()<.5?-1:1):0});
   }else{
-    const wt=Math.max(.8,1.5-L*.08);
+    ic=ICD[ed];const wt=Math.max(.8,1.5-L*.08);
     obs.push({t:'m',x:W+40,y:P.y,wt,f:false});
     if(L>=2&&Math.random()<.3)obs.push({t:'m',x:W+40,y:P.y,wt:wt+.5,f:false});
   }
@@ -187,7 +187,7 @@ function update(dt){
   }
 
   if(alive&&!tipOn){
-    spawnT-=dt;if(spawnT<=0)spawnObs();
+    ic=Math.max(0,ic-dt);spawnT-=dt;if(spawnT<=0)spawnObs();
     coinT-=dt;if(coinT<=0)spawnCoins();
   }
 
