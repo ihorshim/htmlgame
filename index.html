@@ -30,11 +30,11 @@ function dseg(px,py,ax,ay,bx,by){const dx=bx-ax,dy=by-ay;let u=((px-ax)*dx+(py-a
 const DIFF=[{g:200,n:12},{g:325,n:18},{g:450,n:24}];
 const TX={
 de:{sub:'Weiche Blitzen und Raketen aus. Sammle Münzen.',start:'Spielen',set:'Einstellungen',back:'Zurück',snd:'Ton',on:'An',off:'Aus',lang:'Sprache',d:['Leicht','Normal','Schwer'],
- goal:'Ziel: %m m pro Level, %n Level bis zum Ende',trp:['Blitze, Raketen, Schild 2 + 1 auto, Booster 2x','Blitze, Raketen, Stacheln, Laser','Alles plus Sägen und Doppellaser'],best:'Bestwert',hint:'Klick, Touch oder Leertaste gedrückt halten zum Fliegen.',
+ goal:'Ziel: %m m pro Level, %n Level bis zum Ende',trp:['Auto-Schild, Schild und Booster 2x','Blitze, Raketen, Stacheln, Laser','Alles plus Sägen und Doppellaser'],best:'Bestwert',hint:'Klick, Touch oder Leertaste gedrückt halten zum Fliegen.',
  tip1:'Gedrückt halten zum Fliegen',tip2:'Loslassen zum Fallen. Klick, Touch oder Leertaste.',fast:'Schneller und schwerer',crash:'Abgestürzt!',win:'Geschafft! Alle Level gemeistert',demo:'Demo abgeschlossen: 15 Level',pause:'Pause',resume:'Weiter',auto:'Auto-Schild',bst:'Booster',bstd:'Unverwundbar und schiebt dich nach rechts. Taste Q oder Knopf.',dur:'Dauer',gift:'+1 Schild-Ladung, +1 Booster',vic:'SIEG!',vicsub:'Alle Level gemeistert',def:'NIEDERLAGE',defsub:'Du bist abgestürzt',restart:'Neustart',shop:'Shop',rot:'Tipp: Handy quer halten für eine größere Ansicht',tb:'Buffs',tc:'Anpassung',bar:'Barriere',bard:'Schutzschild für 5 Sekunden. Taste E oder Knopf im Spiel.',cd:'Abklingzeit',nx:'Nächste Stufe',buy:'Kaufen',up:'Upgrade',max:'Maximal',jets:'Jetpacks',cos:'Kostüme',eq:'Aktiv',own:'Ausrüsten',act:'Aktiv',tip3:'Esc oder Pause-Knopf: Pause',tag:'Demo: unverwundbar, Autopilot',
  coins:'Münzen',retry:'Nochmal',menu:'Hauptmenü',maps:['Labor','Gießerei','Kühllager','Giftfabrik','Raumstation','Tiefsee']},
 en:{sub:'Dodge zappers and missiles. Grab coins.',start:'Play',set:'Settings',back:'Back',snd:'Sound',on:'On',off:'Off',lang:'Language',d:['Easy','Normal','Hard'],
- goal:'Goal: %m m per level, %n levels to finish',trp:['Zappers, missiles, shield 2 + 1 auto, booster 2x','Zappers, missiles, spikes, lasers','Everything plus saws and double lasers'],best:'Best',hint:'Hold click, touch or Space to fly.',
+ goal:'Goal: %m m per level, %n levels to finish',trp:['Auto-Shield, Shield and Booster 2x','Zappers, missiles, spikes, lasers','Everything plus saws and double lasers'],best:'Best',hint:'Hold click, touch or Space to fly.',
  tip1:'Press and hold to fly',tip2:'Release to fall. Click, touch or Space.',fast:'Faster and harder',crash:'You crashed!',win:'You escaped! All levels cleared',demo:'Demo complete: 15 levels',pause:'Paused',resume:'Resume',auto:'Auto shield',bst:'Booster',bstd:'Invincible dash to the right. Press Q or the in-game button.',dur:'Duration',gift:'+1 shield charge, +1 booster',vic:'VICTORY!',vicsub:'All levels cleared',def:'DEFEAT',defsub:'You crashed',restart:'Restart',shop:'Shop',rot:'Tip: hold your phone sideways for a bigger view',tb:'Buffs',tc:'Customization',bar:'Barrier',bard:'Shield for 5 seconds. Press E or the in-game button.',cd:'Cooldown',nx:'Next level',buy:'Buy',up:'Upgrade',max:'Maxed',jets:'Jetpacks',cos:'Costumes',eq:'Equipped',own:'Equip',act:'Active',tip3:'Esc or pause button: pause',tag:'Demo: invincible, autopilot',
  coins:'coins',retry:'Retry',menu:'Main menu',maps:['Lab','Foundry','Cryo Vault','Toxic Plant','Space Station','Deep Sea']}};
 const TH=[
@@ -109,7 +109,7 @@ let obs=[],cns=[],parts=[],spawnT=1.5,coinT=.6;
 const P={x:130,y:FLOOR-21,vy:0,r:0,g:true};
 
 function reset(c){
-  cheat=c===true;bar=0;bcd=0;icm=0;icl=0;goal=cheat?200:DIFF[di].g;ed=cheat?2:di;asc=!cheat&&ed===0?1:0;shc=!cheat&&ed===0?2:0;boc=SH.bo&&!cheat?(ed===0?2:1):0;boT=0;jr=0;gift=false;state='play';dist=0;coins=0;speed=300;obs=[];cns=[];parts=[];spawnT=1.2;coinT=.6;lvl=0;lvT=0;tipOn=!cheat;hold=false;
+  cheat=c===true;bar=0;bcd=0;icm=0;icl=0;goal=cheat?200:DIFF[di].g;ed=cheat?2:di;asc=!cheat&&ed===0?1:0;shc=!cheat&&ed===0&&SH.bl>0?2:0;boc=SH.bo&&!cheat?(ed===0?2:1):0;boT=0;jr=0;gift=false;state='play';dist=0;coins=0;speed=300;obs=[];cns=[];parts=[];spawnT=1.2;coinT=.6;lvl=0;lvT=0;tipOn=!cheat;hold=false;
   P.x=130;P.y=FLOOR-21;P.vy=0;P.r=0;deadT=0;
 }
 function die(){
